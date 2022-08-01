@@ -102,8 +102,8 @@ let findMovies = function(title , rating){
 
 elForm.addEventListener("submit", function(evt) {
   evt.preventDefault();
-  
   let searchTitle = elSearchInput.value.trim();
+  elSearchInput.value = null;
   let movieTitleRegExp = new RegExp(searchTitle, "gi");
 
   let minimumRating = Number(elRatingInput.value);
