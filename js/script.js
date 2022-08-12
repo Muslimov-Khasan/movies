@@ -1,116 +1,264 @@
-let elForm = document.querySelector(".js-form");
-let elSearchInput = document.querySelector(".js-search-input", elForm);
-let elCatagorySelect = document.querySelector(".js-catagory", elForm);
-let elRatingInput = document.querySelector(".js-rating-input", elForm);
-let elSortingSealect = document.querySelector(".js-soring-select", elForm);
+//query elements from HTML
+let elForm = $(".js-form");
+let elSearchInput = $(".js-search-input");
+let elSearchReytingInput = $(".js-search-reyting-input");
+let elSearchSelectCategories = $("#categories");
+let elSearchSort = $("#tartib");
+let elOkbtn = $(".js-form-btn");
+let elKinolarList = $(".js-kinolar-list");
+let sectionn = $(".div-div-modal");
+let elTemplate = $("#js-template").content;
+let elTemplatemodal = $("#js-template-modal").content;
 
-let elSerchResult = document.querySelector(".js-list");
+let sortMovies = [];
 
-let elTemplate = document.querySelector(".js-template").content;
-
-// kinolarning kalit so'zlarini tog'irlash
-
-let normalizedMovies = movies.map((movie,i) => {
-  return{
-    id: i + 1,
+movies.splice(50);
+//Nusxa olish
+let normalizeMovies =  movies.map((movie, i) =>{
+  return {
+    id: i,
     title: movie.Title.toString(),
-    year: movie.movie_year,
-    rating: movie.imdb_rating,
-    catagories: movie.Categories.split("|").join(", "),
+    fulltitle: movie.fulltitle,
+    categories: movie.Categories.split("|").join(", "),
+    summary: movie.summary,
+    movie_year: movie.movie_year,
+    imdb_rating: movie.imdb_rating,
+    runtime: movie.runtime,
+    language: movie.language,
+    imdb_id: movie.imdb_id,
     trailer: `https://www.youtube.com/watch?v=${movie.ytid}`,
     smallPoster: `http://i3.ytimg.com/vi/${movie.ytid}/hqdefault.jpg`,
+    bigPoster: `https://i3.ytimg.com/vi/${movie.ytid}/maxresdefault.jpg`
   }
-})
+}) 
 
-// category select uchun options lar yaratish va render qilish
+//Tamplatega qiymatlar berish funksiyasi
+let logMovies = function(film){
+  let elTemplateClone = elTemplate.cloneNode(true);
+  
+  $(".js-kino-img", elTemplateClone).src = film.smallPoster;
+  $(".js-kino-img", elTemplateClone).alt = film.title;
+  $(".js-kino-title", elTemplateClone).textContent = film.title
+  $(".js-kino-movie-year", elTemplateClone).textContent =film.movie_year
+  $(".js-kino-categories", elTemplateClone).textContent = film.categories
+  $(".js-kino-reytinggi", elTemplateClone).textContent = film.imdb_rating
+  $(".js-kino-trailer", elTemplateClone).href = film.trailer;
+  $(".btn-modal-modal", elTemplateClone).id = film.id;
+  $(".btn-modal-modal", elTemplateClone).setAttribute("data-bs-target", `#aa${film.id}`);
+  $(".js-kinolar-item", elTemplateClone).dataset.imdbid = film.imdb_id;
 
-let createGenreSelectOptions = function () {
-  let movieCatagory = [];
+  return elTemplateClone;
+}
 
-  normalizedMovies.splice(200).forEach(function(movie) {
-    movie.catagories.split(", ").forEach(function(catagory) {
-      if(!movieCatagory.includes(catagory)) {
-        movieCatagory.push(catagory);
+//Render funkisyasi
+let renderKinolar = function(item){
+  elKinolarList.innerHTML = "";
+  let fragment = document.createDocumentFragment();
+
+  item.forEach((film) => {
+    fragment.appendChild(logMovies(film));
+  })
+  elKinolarList.append(fragment);
+}
+renderKinolar(normalizeMovies);
+
+
+//Kategoryalarni topish funksiyasi 
+let numberCategorie = [];
+let numberCategories = function(){
+  
+  normalizeMovies.forEach((movie) => {
+    movie.categories.split(", ").forEach((categori) => {
+      if(!numberCategorie.includes(categori)){
+        numberCategorie.push(categori);
       }
     })
   })
 
-  movieCatagory.sort();
-
-  let elOptionsFragment = document.createDocumentFragment();
-
-  movieCatagory.forEach(function(catagory) {
-    let elCatagoryOption = createElement("option", "", catagory);
-    elCatagoryOption.value = catagory.toLowerCase();
-    catagory.name = "catagory";
-
-    elOptionsFragment.appendChild(elCatagoryOption);
-    elCatagorySelect.appendChild(elOptionsFragment);
-  })
+  numberCategorie.sort();
+  numberCategorie.unshift("All");
+   return numberCategorie
 }
-createGenreSelectOptions();
+numberCategories();
 
-// kinolarni render qilish
 
-let renderMovies = function(searchResults) {
-  elSerchResult.innerHTML = "";
+//Categoria boyicha opshin yaratish function
+numberCategorie.forEach((categoria) => {
+  let newOption = document.createElement("option");
+  newOption.textContent = categoria;
+  newOption.value = categoria;
+  newOption.name = categoria;
 
-  let elResultFragment = document.createDocumentFragment();
+  elSearchSelectCategories.append(newOption);
+})
 
-  searchResults.forEach(function(movie) {
-    let elMovie = elTemplate.cloneNode(true);
 
-    elMovie.querySelector(".movie-title").textContent = movie.title;
-    elMovie.querySelector(".movie-poster").src = movie.smallPoster;
-    elMovie.querySelector(".movie-year").textContent = movie.year;
-    elMovie.querySelector(".movie-catagory").textContent = movie.catagories;
-    elMovie.querySelector(".movie-rating").textContent = movie.rating;
-    elMovie.querySelector(".movie-trailer-link").href = movie.trailer;
+//Function Alifbo va reyting boyicha tartiblashda optionlar yaratish chiqarish
+let selectOptionCreat = ["A-Z", "Z-A", "Reytingi =>", "Reytingi <=", "Yil =>", "Yil <="];
 
-    elResultFragment.appendChild(elMovie);
-  })
+for(i = 0; i <= selectOptionCreat.length; i++){
+  let elSortTitleOption = document.createElement("option");
+  elSortTitleOption.textContent = selectOptionCreat[i];
+  elSortTitleOption.value = selectOptionCreat[i];
 
-  elSerchResult.appendChild(elResultFragment);
+  elSearchSort.append(elSortTitleOption);
 }
-renderMovies(normalizedMovies);
 
-let sortAz = function(arr) {
-  return arr.sort(function(a, b) {
-    if (a.title > b.title) {
-      return 1;
-    } else if (a.title < b.title) {
-      return -1;
-    } else{
-      return 0;
+
+//search render
+let renderSearch = function(moviesArry){
+  if(elSearchInput.value != "" && elSearchInput.value != null){
+    const search = new RegExp(elSearchInput.value, "gi")
+    readyMoviesArr =  moviesArry.filter((film) => {
+      return (film.title.match(search))
+    })
+  }
+  else{
+    readyMoviesArr = moviesArry;
+  }
+
+  if(elSearchReytingInput.value != "" && !isNaN(parseFloat(elSearchReytingInput.value))){
+    
+    readyMoviesArr = readyMoviesArr.filter((film) => {
+      return( parseFloat(elSearchReytingInput.value) <= film.imdb_rating)
+    })
+  }
+
+  if(elSearchSelectCategories.value !== "" && elSearchSelectCategories.value !== "All"){
+    let searchRegExCategory = new RegExp(elSearchSelectCategories.value, "gi");
+    readyMoviesArr = readyMoviesArr.filter((film) => {
+      return film.categories.match(searchRegExCategory);
+    })
+  }
+
+
+  if(elSearchSort.value !== ""){
+
+    if(elSearchSort.value == "A-Z"){
+    sortMovies = readyMoviesArr.sort((a, b)=> a.title.localeCompare(b.title))
+    }
+
+    if(elSearchSort.value == "Z-A"){
+      sortMovies = readyMoviesArr.sort((a,b)=> b.title.localeCompare(a.title))
+      }
+
+    if(elSearchSort.value == "Reytingi =>"){
+      sortMovies  = readyMoviesArr.sort(function(a,b) {
+       return a.imdb_rating - b.imdb_rating
+      })
+    }
+
+    if(elSearchSort.value == "Reytingi <="){
+      sortMovies  = readyMoviesArr.sort(function(a,b) {
+       return b.imdb_rating - a.imdb_rating
+      })
+    }
+
+
+    if(elSearchSort.value == "Yil =>"){
+      sortMovies  = readyMoviesArr.sort(function(a,b) {
+        return a.movie_year - b.movie_year
+       })
+    }
+
+    if(elSearchSort.value == "Yil <="){
+      sortMovies  = readyMoviesArr.sort(function(a,b) {
+        return b.movie_year - a.movie_year
+       })
+    }
+
+        readyMoviesArr = [];
+        readyMoviesArr = sortMovies;
+  }
+
+  return readyMoviesArr
+}
+
+
+elOkbtn.addEventListener("click", function(evt) {
+  evt.preventDefault();
+
+  renderKinolar(renderSearch(normalizeMovies));
+})
+
+
+//Modal chiqarish  
+let logMoviesModal = function(){
+  let fragmentModal = document.createDocumentFragment();
+
+  normalizeMovies.forEach((film) => {
+
+    let elTemplateModalClone = elTemplatemodal.cloneNode(true);
+    $(".modal-img", elTemplateModalClone).src = film.smallPoster;
+    $(".text-center", elTemplateModalClone).textContent = film.title;
+    $(".js-film-summary", elTemplateModalClone).textContent = film.summary;
+    $(".div-modal", elTemplateModalClone).id = `aa${film.id}`;
+
+    fragmentModal.appendChild(elTemplateModalClone);
+  
+  })
+  
+  sectionn.append(fragmentModal);
+
+}
+
+logMoviesModal();
+
+;
+//Bookmark qoshish
+let bookMarkArry = JSON.parse(localStorage.getItem("film")) || [];
+let elTemplateBookmark = $(".bookmark-template").content;
+
+
+//Render bookmark
+let renderBookmark = function(arry){
+  $(".js-bookmark-list").innerHTML = "";
+  let fragmentBookmark = document.createDocumentFragment();
+
+  arry.forEach((film) => {
+    let elTemplateBookmarkClone =  elTemplateBookmark.cloneNode(true);
+
+    $(".text-center", elTemplateBookmarkClone).textContent = film.title;
+    $(".bookmark-btn-delete", elTemplateBookmarkClone).dataset.Id = film.imdb_id;
+    $(".js-bokkmark-item", elTemplateBookmarkClone).dataset.tartib = `id-${film.id}`;
+    
+
+    fragmentBookmark.appendChild(elTemplateBookmarkClone);
+  })
+  $(".js-bookmark-list").appendChild(fragmentBookmark);
+}
+
+renderBookmark(bookMarkArry);
+
+
+$(".js-kinolar-list").addEventListener("click", (evt) => {
+  evt.preventDefault();
+ 
+  if(evt.target.matches(".js-bookmark-btn")){
+    let findImdbId = evt.target.closest(".js-kinolar-item").dataset.imdbid;
+    let findFilmWidthImdbId = normalizeMovies.find(item => item.imdb_id == findImdbId)
+
+    if(!bookMarkArry.includes(findFilmWidthImdbId)){
+    bookMarkArry.push(findFilmWidthImdbId);
+    localStorage.setItem("film", JSON.stringify(bookMarkArry));
+    }
+
+  }
+
+  renderBookmark(bookMarkArry);
+})
+
+
+  $(".js-bookmark-list").addEventListener("click", (evt) => {
+    evt.preventDefault();
+
+    if(evt.target.matches(".bookmark-btn-delete")){
+     let findIdDelete = evt.target.closest(".js-bokkmark-item").dataset.tartib;
+     let findBookmarIndexfor = bookMarkArry.findIndex((film) => {
+       return `id-${film.id}` == findIdDelete
+     })
+     bookMarkArry.splice(findBookmarIndexfor,1);
+     renderBookmark(bookMarkArry);
+     localStorage.setItem("film", JSON.stringify(bookMarkArry));
     }
   })
-}
-
-let sortSearchResult = function(results, sortType) {
-  if (sortType === "az") {
-    sortAz(results);
-  } else if (sortType === "za") {
-    sortAz(results).reverse();
-  }
-}
-
-let findMovies = function(title , rating){
-  return normalizedMovies.filter(function (movie) {
-    return movie.title.match(title) && movie.rating >= rating;
-  })
-}
-
-elForm.addEventListener("submit", function(evt) {
-  evt.preventDefault();
-  let searchTitle = elSearchInput.value.trim();
-  elSearchInput.value = null;
-  let movieTitleRegExp = new RegExp(searchTitle, "gi");
-
-  let minimumRating = Number(elRatingInput.value);
-  let sorting = elSortingSealect.value;
-
-  let searchResults = findMovies(movieTitleRegExp, minimumRating);
-  sortSearchResult(searchResults, sorting);
-
-  renderMovies(searchResults);
-})

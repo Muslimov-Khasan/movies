@@ -9,83 +9,70 @@
   <link rel="stylesheet" href="./css/main.css">
 </head>
 <body>
-  <div class="movies">
+  
+  <section class="secttion">
+    <div class="div-div-modal"></div>
     <div class="container">
-      <h2 class="text-center mt-2">Movies</h2>
-      <div class="movies-inner d-flex mt-3">
-        <form class="js-form d-flex flex-column m-2">
-          <label class="mb-3 input-group-lg" for="search-input">
-            <input class="js-search-input" autocomplete="off" type="search" placeholder="search" id="search-input"
-            name="search">
-          </label>
-
-          <label class="mb-3" for="sort-catagory">
-            <select class="js-catagory" name="catagory" id="sort-catagory">
-              <option value="all">All</option>
-            </select>
-          </label>
-
-          <label class="mb-3" for="sort-rating">
-            <input class="js-rating-input" type="number" placeholder="enter rating" id="sort-rating" name="rating">
-          </label>
-
-          <label class="mb-3" for="sort-movies">
-            <select class="js-soring-select" name="sorting" id="sort-movies">
-              <option value="rating_desc" selected>
-                Rating high to low
-              </option>
-              <option value="rating_asc">Rating low to high</option>
-              <option value="az">A-Z</option>
-              <option value="za">Z-A</option>
-              <option value="year_desc">Year new to old</option>
-              <option value="year_asc">Year old to new</option>
-            </select>
-          </label>
-
-          <button class="btn btn-primary">Search</button>
-        </form>
-        
-        <ul class="js-list bg-light list-unstyled d-flex flex-wrap justify-content-around ms-4">
-        </ul>
+      <div class="inner mt-4">
       </div>
-    </div>
-  </div>
 
+        <form class="js-form" action="https://echo.htmlacademy.ru" method="get">
+         <div class="js-search-inputs d-flex justify-content-between">
+            <input class="js-search-input form-control form-inner"  type="search" style="width: 200px;" placeholder="Search title">
+            <input class="js-search-reyting-input form-control ms-5 style" name="search-reyting=>" type="number" style="width: 200px;" placeholder="Searsh reyting">
+            <select class="form-select ms-5 form-inner" style="width:200px;" name="categori" id="categories"></select>
+            <select class="form-select ms-5 form-inner" style="width:200px;" name="tartib" id="tartib"></select>
+            <button class="js-form-btn btn btn-primary" style="width: 80px;">Search</button>
+          </div>
+        </form>
 
-  <template class="js-template">
-    <li class="item m-3 bg-white rounded-3">
-      <div class="card bg-white border-0">
-        <img class="movie-poster" src="" alt="picture">
-
-        <div class="card-body bg-white">
-          <h3 class="movie-title h5"></h3>
-
-          <p class="card-text">
-            <span>Year:</span>
-            <span class="movie-year"></span>
-          </p>
-
-          <p class="card-text">
-            <span>Rating:</span>
-            <span class="movie-rating"></span>
-          </p>
-
-          <p class="card-text">
-            <span>Catagory:</span>
-            <span class="movie-catagory"></span>
-          </p>
-        
-            <a class="movie-trailer-link btn btn-danger" target="_blank">Watch</a>
-
-            <button class="modal-btn btn btn-primary">Modal</button>
-            <button class="bookmark btn btn-dark">Bookmark</button>
+        <div class="film-list-bookmark-box d-flex justify-content-between">
+          <div class="movies-list-box">
+            <ul class="js-kinolar-list list-unstyled mt-3 d-flex justify-content-around flex-wrap" style="width:820px;"></ul>
+          </div>
+  
+          <div class="movies-bookmark-box mt-4 card-textt position-fixed end-0">
+            <p class="text-white bookmark-name border-css text-center btn btn-primary rounded-3" style="width: 250px;">Movies Bookmar</p>
+            <ul class="js-bookmark-list d-flex flex-column list-unstyled m-0 p-0"></ul>
+          </div>
         </div>
+      </div>
+  </section>
+
+  <template id="js-template">
+    <li class="js-kinolar-item d-flex justify-content-around flex-column my-2 p-2" style="width:400px;">
+      <img class="js-kino-img" src="" alt="">
+      <h5 class="js-kino-title text-center"></h5>
+      <p class="js-kino-movie-year text-center"></p>
+      <p class="js-kino-categories text-center"></p>
+      <p class="js-kino-reytinggi text-center"></p>
+      <div class="d-flex justify-content-center gap-2">
+        <button class="js-kino-trailer text-center btn-danger btn btn-primary w-25 ms-2" target="_blank">YouTobe</button>
+        <button class="btn-modal-modal buttons read_btn text-center btn btn-primary w-25" data-bs-toggle="modal">Modal</button>
+        <button class="js-bookmark-btn btn btn-dark">Bookmark</button>
       </div>
     </li>
   </template>
+  
+<template id="js-template-modal">
+  <div class="div-modal modal fade" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content modal-style">
+        <img class="modal-img" src="" alt="">
+        <h4 class="text-center"></h4>
+        <p class="modal-summary-text text-center js-film-summary"></p>
+      </div>
+    </div>
+  </div>
+</template>
 
-  <script src="./bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script src="./js/movies.js"></script>
+<template class="bookmark-template">
+  <li class="js-bokkmark-item list-unstyled border-css ms-4 d-flex flex-column mb-1" style="width:250px ;">
+    <strong class="text-center">Film title</strong>
+    <button class="btn btn-primary bookmark-btn-delete btn mb-1" style="margin: 0 auto; margin-top: 5px;">Delete</button>
+  </li>
+</template>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>  <script src="./js/movies.js"></script>
   <script src="./js/utils.js"></script>
   <script src="./js/script.js"></script>
 </body>
