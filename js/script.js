@@ -12,7 +12,7 @@ let elTemplatemodal = $("#js-template-modal").content;
 
 let sortMovies = [];
 
-movies.splice(50);
+movies.splice(200);
 //Nusxa olish
 let normalizeMovies =  movies.map((movie, i) =>{
   return {
@@ -30,10 +30,29 @@ let normalizeMovies =  movies.map((movie, i) =>{
     smallPoster: `http://i3.ytimg.com/vi/${movie.ytid}/hqdefault.jpg`,
     bigPoster: `https://i3.ytimg.com/vi/${movie.ytid}/maxresdefault.jpg`
   }
-}) 
-
+});
+//darkmode mode
+const darkmode = () => {
+  const SetTheme = document.body;
+  SetTheme.classList.toggle("dark-mode");
+  let theme;
+  if (SetTheme.classList.contains("dark-mode")) {
+    theme = "DARK";
+  } else {
+    theme = "LIGHT";
+  }
+  localStorage.setItem("PageTheme", JSON.stringify(theme));
+};
+setInterval(() => {
+  let GetTheme = JSON.parse(localStorage.getItem("PageTheme"));
+  if (GetTheme === "DARK") {
+    document.body.classList = "dark-mode";
+   } else {
+    document.body.classList = "";
+  }
+}, 5);
 //Tamplatega qiymatlar berish funksiyasi
-let logMovies = function(film){
+let logMovies = (film) => {
   let elTemplateClone = elTemplate.cloneNode(true);
   
   $(".js-kino-img", elTemplateClone).src = film.smallPoster;
@@ -46,12 +65,11 @@ let logMovies = function(film){
   $(".btn-modal-modal", elTemplateClone).id = film.id;
   $(".btn-modal-modal", elTemplateClone).setAttribute("data-bs-target", `#aa${film.id}`);
   $(".js-kinolar-item", elTemplateClone).dataset.imdbid = film.imdb_id;
-
   return elTemplateClone;
 }
 
 //Render funkisyasi
-let renderKinolar = function(item){
+let renderKinolar = (item) => {
   elKinolarList.innerHTML = "";
   let fragment = document.createDocumentFragment();
 
@@ -62,10 +80,9 @@ let renderKinolar = function(item){
 }
 renderKinolar(normalizeMovies);
 
-
 //Kategoryalarni topish funksiyasi 
 let numberCategorie = [];
-let numberCategories = function(){
+let numberCategories = () => {
   
   normalizeMovies.forEach((movie) => {
     movie.categories.split(", ").forEach((categori) => {
@@ -81,7 +98,6 @@ let numberCategories = function(){
 }
 numberCategories();
 
-
 //Categoria boyicha opshin yaratish function
 numberCategorie.forEach((categoria) => {
   let newOption = document.createElement("option");
@@ -92,7 +108,6 @@ numberCategorie.forEach((categoria) => {
   elSearchSelectCategories.append(newOption);
 })
 
-
 //Function Alifbo va reyting boyicha tartiblashda optionlar yaratish chiqarish
 let selectOptionCreat = ["A-Z", "Z-A", "Reytingi =>", "Reytingi <=", "Yil =>", "Yil <="];
 
@@ -100,15 +115,14 @@ for(i = 0; i <= selectOptionCreat.length; i++){
   let elSortTitleOption = document.createElement("option");
   elSortTitleOption.textContent = selectOptionCreat[i];
   elSortTitleOption.value = selectOptionCreat[i];
-
   elSearchSort.append(elSortTitleOption);
 }
 
-
 //search render
-let renderSearch = function(moviesArry){
+let renderSearch = (moviesArry) => {
   if(elSearchInput.value != "" && elSearchInput.value != null){
     const search = new RegExp(elSearchInput.value, "gi")
+     let message = elSearchInput.value = null;
     readyMoviesArr =  moviesArry.filter((film) => {
       return (film.title.match(search))
     })
@@ -143,47 +157,43 @@ let renderSearch = function(moviesArry){
       }
 
     if(elSearchSort.value == "Reytingi =>"){
-      sortMovies  = readyMoviesArr.sort(function(a,b) {
+      sortMovies  = readyMoviesArr.sort((a,b) => {
        return a.imdb_rating - b.imdb_rating
       })
     }
 
     if(elSearchSort.value == "Reytingi <="){
-      sortMovies  = readyMoviesArr.sort(function(a,b) {
+      sortMovies  = readyMoviesArr.sort((a,b) => {
        return b.imdb_rating - a.imdb_rating
       })
     }
 
 
     if(elSearchSort.value == "Yil =>"){
-      sortMovies  = readyMoviesArr.sort(function(a,b) {
+      sortMovies  = readyMoviesArr.sort((a,b) => {
         return a.movie_year - b.movie_year
        })
     }
 
     if(elSearchSort.value == "Yil <="){
-      sortMovies  = readyMoviesArr.sort(function(a,b) {
+      sortMovies  = readyMoviesArr.sort((a,b) => {
         return b.movie_year - a.movie_year
        })
     }
-
         readyMoviesArr = [];
         readyMoviesArr = sortMovies;
   }
-
   return readyMoviesArr
 }
 
-
-elOkbtn.addEventListener("click", function(evt) {
+elOkbtn.addEventListener("click", (evt) => {
   evt.preventDefault();
 
   renderKinolar(renderSearch(normalizeMovies));
 })
 
-
 //Modal chiqarish  
-let logMoviesModal = function(){
+let logMoviesModal = () => {
   let fragmentModal = document.createDocumentFragment();
 
   normalizeMovies.forEach((film) => {
@@ -193,25 +203,19 @@ let logMoviesModal = function(){
     $(".text-center", elTemplateModalClone).textContent = film.title;
     $(".js-film-summary", elTemplateModalClone).textContent = film.summary;
     $(".div-modal", elTemplateModalClone).id = `aa${film.id}`;
-
     fragmentModal.appendChild(elTemplateModalClone);
-  
   })
-  
   sectionn.append(fragmentModal);
-
 }
 
 logMoviesModal();
 
-;
 //Bookmark qoshish
 let bookMarkArry = JSON.parse(localStorage.getItem("film")) || [];
 let elTemplateBookmark = $(".bookmark-template").content;
 
-
 //Render bookmark
-let renderBookmark = function(arry){
+let renderBookmark = (arry) => {
   $(".js-bookmark-list").innerHTML = "";
   let fragmentBookmark = document.createDocumentFragment();
 
@@ -220,8 +224,7 @@ let renderBookmark = function(arry){
 
     $(".text-center", elTemplateBookmarkClone).textContent = film.title;
     $(".bookmark-btn-delete", elTemplateBookmarkClone).dataset.Id = film.imdb_id;
-    $(".js-bokkmark-item", elTemplateBookmarkClone).dataset.tartib = `id-${film.id}`;
-    
+    $(".js-bokkmark-item", elTemplateBookmarkClone).dataset.tartib = `id-${film.id}`;   
 
     fragmentBookmark.appendChild(elTemplateBookmarkClone);
   })
@@ -229,7 +232,6 @@ let renderBookmark = function(arry){
 }
 
 renderBookmark(bookMarkArry);
-
 
 $(".js-kinolar-list").addEventListener("click", (evt) => {
   evt.preventDefault();
@@ -242,12 +244,9 @@ $(".js-kinolar-list").addEventListener("click", (evt) => {
     bookMarkArry.push(findFilmWidthImdbId);
     localStorage.setItem("film", JSON.stringify(bookMarkArry));
     }
-
   }
-
   renderBookmark(bookMarkArry);
 })
-
 
   $(".js-bookmark-list").addEventListener("click", (evt) => {
     evt.preventDefault();
@@ -257,7 +256,7 @@ $(".js-kinolar-list").addEventListener("click", (evt) => {
      let findBookmarIndexfor = bookMarkArry.findIndex((film) => {
        return `id-${film.id}` == findIdDelete
      })
-     bookMarkArry.splice(findBookmarIndexfor,1);
+     bookMarkArry.splice(findBookmarIndexfor, 1);
      renderBookmark(bookMarkArry);
      localStorage.setItem("film", JSON.stringify(bookMarkArry));
     }

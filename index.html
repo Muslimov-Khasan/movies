@@ -9,10 +9,9 @@
   <link rel="stylesheet" href="./css/main.css">
 </head>
 <body>
-  
   <section class="secttion">
     <div class="div-div-modal"></div>
-    <div class="container">
+    <div class="container-lg">
       <div class="inner mt-4">
       </div>
 
@@ -22,10 +21,13 @@
             <input class="js-search-reyting-input form-control ms-5 style" name="search-reyting=>" type="number" style="width: 200px;" placeholder="Searsh reyting">
             <select class="form-select ms-5 form-inner" style="width:200px;" name="categori" id="categories"></select>
             <select class="form-select ms-5 form-inner" style="width:200px;" name="tartib" id="tartib"></select>
+            <select class="select form-select ms-5 form-inner" style="width:200px;" onchange="darkmode()">
+              <option value="white">white</option>
+              <option value="dark">dark</option>
+            </select>
             <button class="js-form-btn btn btn-primary" style="width: 80px;">Search</button>
           </div>
         </form>
-
         <div class="film-list-bookmark-box d-flex justify-content-between">
           <div class="movies-list-box">
             <ul class="js-kinolar-list list-unstyled mt-3 d-flex justify-content-around flex-wrap" style="width:820px;"></ul>

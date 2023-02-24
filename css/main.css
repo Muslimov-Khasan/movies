@@ -1,36 +1,36 @@
-*{
+* {
   box-sizing: border-box;
 }
 
-body{
+body {
   padding: 0;
   margin: 0;
 }
 
-.border-css{
+.border-css {
   border: 1px black solid;
   border-radius: 4%;
 }
 
-.form-inner{
+.form-inner {
   color: #000;
 }
 
-.modal-summary-text{
+.modal-summary-text {
   margin: 0;
   padding: 10px;
   text-indent: 20px;
 }
 
-.bookmark-name{
+.bookmark-name {
   margin-left: 100px;
 }
 
-.bookmark-btn-delete{
+.bookmark-btn-delete {
   margin-left: 200px;
 }
 
-.bookmark-name{
+.bookmark-name {
   margin: 0;
   padding: 0;
   margin-bottom: 10px;
@@ -39,15 +39,20 @@ body{
   margin-left: 24px;
 }
 
-.js-bookmark-list{
+.js-bookmark-list {
   height: 420px;
   overflow: auto;
   overflow: hidden;
 }
 
-.modal-img{
+.modal-img {
   margin-top: 2px;
 }
+
+.dark-mode {
+  background-color: darkgray;
+}
+
 
 ::-webkit-scrollbar {
   width: 5px;
@@ -67,6 +72,6 @@ body{
   background-color: #9e9e9e;
 }
 
-.movies-bookmark-box{
+.movies-bookmark-box {
   margin-right: 120px;
 }
